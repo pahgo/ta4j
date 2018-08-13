@@ -71,7 +71,7 @@ public class BaseBar implements Bar {
         this.endTime = endTime;
         this.beginTime = endTime.minus(timePeriod);
         this.volume = numFunction.apply(0);
-        this.amount = numFunction.apply(0);
+        this.setAmount(numFunction.apply(0));
     }
 
     /**
@@ -143,7 +143,7 @@ public class BaseBar implements Bar {
         this.minPrice = lowPrice;
         this.closePrice = closePrice;
         this.volume = volume;
-        this.amount = amount;
+        this.setAmount(amount);
     }
 
     /**
@@ -225,7 +225,7 @@ public class BaseBar implements Bar {
         addPrice(tradePrice);
 
         volume = volume.plus(tradeVolume);
-        amount = amount.plus(tradeVolume.multipliedBy(tradePrice));
+        setAmount(getAmount().plus(tradeVolume.multipliedBy(tradePrice)));
         trades++;
     }
 
@@ -267,4 +267,9 @@ public class BaseBar implements Bar {
             throw new IllegalArgumentException("End time cannot be null");
         }
     }
+
+	public void setAmount(Num amount) {
+		this.amount = amount;
+	}
+    
 }

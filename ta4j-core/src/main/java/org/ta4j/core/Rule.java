@@ -26,6 +26,7 @@ package org.ta4j.core;
 import org.ta4j.core.trading.rules.AndRule;
 import org.ta4j.core.trading.rules.NotRule;
 import org.ta4j.core.trading.rules.OrRule;
+import org.ta4j.core.trading.rules.WaitForRule_Ext;
 import org.ta4j.core.trading.rules.XorRule;
 
 /**
@@ -37,6 +38,9 @@ import org.ta4j.core.trading.rules.XorRule;
  */
 public interface Rule {
 
+	default Rule wait(Rule rule, int numberOfBars) {
+		return new WaitForRule_Ext(this, rule, numberOfBars);
+	}
     /**
      * @param rule another trading rule
      * @return a rule which is the AND combination of this rule with the provided one

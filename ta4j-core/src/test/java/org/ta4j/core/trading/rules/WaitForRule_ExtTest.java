@@ -23,27 +23,37 @@
  *******************************************************************************/
 package org.ta4j.core.trading.rules;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Before;
+import org.junit.Test;
 import org.ta4j.core.Rule;
 
-/**
- * An abstract trading {@link Rule rule}.
- */
-public abstract class AbstractRule implements Rule {
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
-    /** The logger */
-    protected final Logger log = LoggerFactory.getLogger(getClass());
+public class WaitForRule_ExtTest {
 
-    /** The class name */
-    protected final String className = getClass().getSimpleName();
-
-    /**
-     * Traces the isSatisfied() method calls.
-     * @param index the bar index
-     * @param isSatisfied true if the rule is satisfied, false otherwise
-     */
-    protected void traceIsSatisfied(int index, boolean isSatisfied) {
-    		log.trace("{}#isSatisfied({}): {}", className, index, isSatisfied);
+    private Rule satisfiedRule;
+    private Rule unsatisfiedRule;
+    
+    @Before
+    public void setUp() {
+        satisfiedRule = new BooleanRule(true);
+        unsatisfiedRule = new BooleanRule(false);
+    }
+    
+    @Test
+    public void isSatisfied() {
+    	assertFalse(satisfiedRule.wait(BooleanRule.FALSE, 3).isSatisfied(0));
+        
+        assertFalse(satisfiedRule.and(BooleanRule.FALSE).isSatisfied(0));
+        assertFalse(BooleanRule.FALSE.and(satisfiedRule).isSatisfied(0));
+        assertFalse(unsatisfiedRule.and(BooleanRule.FALSE).isSatisfied(0));
+        assertFalse(BooleanRule.FALSE.and(unsatisfiedRule).isSatisfied(0));
+        
+        assertTrue(satisfiedRule.and(BooleanRule.TRUE).isSatisfied(10));
+        assertTrue(BooleanRule.TRUE.and(satisfiedRule).isSatisfied(10));
+        assertFalse(unsatisfiedRule.and(BooleanRule.TRUE).isSatisfied(10));
+        assertFalse(BooleanRule.TRUE.and(unsatisfiedRule).isSatisfied(10));
     }
 }
+        

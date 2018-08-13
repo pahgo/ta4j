@@ -170,4 +170,6 @@ public interface Bar extends Serializable {
     }
 
     void addPrice(Num price);
+	public void setAmount(Num amount);
+
 }
